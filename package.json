@@ -1,0 +1,8 @@
+{
+  "name": "binary-transformer",
+  "version": "1.0.0",
+  "description": "Take your binary file, and parse into structurized objects",
+  "main": "src/index.ts",
+  "author": "Soanvig <soanvig@gmail.com>",
+  "license": "GNU LGPLv3"
+}
