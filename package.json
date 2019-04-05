@@ -4,5 +4,11 @@
   "description": "Take your binary file, and parse into structurized objects",
   "main": "src/index.ts",
   "author": "Soanvig <soanvig@gmail.com>",
-  "license": "GNU LGPLv3"
+  "license": "GNU LGPLv3",
+  "devDependencies": {
+    "tslint": "^5.15.0",
+    "tslint-config-standard": "^8.0.1",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.4.1"
+  }
 }
