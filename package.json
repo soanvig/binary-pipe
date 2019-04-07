@@ -6,6 +6,7 @@
   "author": "Soanvig <soanvig@gmail.com>",
   "license": "GNU LGPLv3",
   "devDependencies": {
+    "ts-node": "^8.0.3",
     "tslint": "^5.15.0",
     "tslint-config-standard": "^8.0.1",
     "tslint-eslint-rules": "^5.4.0",
