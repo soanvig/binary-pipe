@@ -1,4 +1,4 @@
-import { IExtendFunction, BinaryTransformer } from '~/index.ts';
+import { IExtendFunction, BinaryTransformer } from './index';
 
 function generator<T> (func: (val: string) => T): IExtendFunction<T> {
   return (buffer, previousValue) => ({

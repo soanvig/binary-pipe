@@ -8,9 +8,6 @@
       "outDir": "./dist",
       "strict": true,
       "baseUrl": "./",
-      "paths": {
-        "~/*": ["./src/*"]
-      },
       "esModuleInterop": true,
       "strictPropertyInitialization": false
     },
