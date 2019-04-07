@@ -6,7 +6,9 @@
   "author": "Soanvig <soanvig@gmail.com>",
   "license": "GNU LGPLv3",
   "scripts": {
-    "test:unit": "jest"
+    "test:unit": "jest",
+    "test:lint": "tslint --project .",
+    "test:ts": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/jest": "^24.0.11",
