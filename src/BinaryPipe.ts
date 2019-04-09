@@ -1,4 +1,4 @@
-export type IExtendFunction<T extends Record<string, any>> = <U>(buffer: any, previousValue: U) => T & U;
+export type IExtendFunction<T extends Record<string, any>> = <U>(buffer: Buffer, previousValue: U) => T & U;
 
 export interface IBinaryPipe<T> {
   pipe<A> (f1: IExtendFunction<A>): ReturnType<IExtendFunction<T & A>>;
@@ -12,12 +12,26 @@ export interface IBinaryPipe<T> {
   pipe (...functions: IExtendFunction<any>[]): Record<string, any>;
 }
 
+/**
+ * BinaryPipe pipes buffer through pipeline of functions.
+ * Each function will fillup initialObject with returned object.
+ *
+ * @param buffer - buffer to parse
+ * @param initialObject - object that should be filled-up with values
+ */
 export function BinaryPipe<T extends Record<string, any>> (
-    buffer: any, initialValue: T = {} as T,
+    buffer: Buffer, initialObject: T = {} as T,
   ): IBinaryPipe<T> {
   return {
+    /**
+     * Pipes buffer through given functions.
+     * It's up to function how many bytes it takes from buffer.
+     * Each function should return new literal object, that will be merged to initialObject.
+     *
+     * @param functions - functions for pipeline
+     */
     pipe (...functions: IExtendFunction<any>[]) {
-      return functions.reduce((previousValue, func) => func(buffer, previousValue), initialValue);
+      return functions.reduce((previousValue, func) => func(buffer, previousValue), initialObject);
     },
   };
 }

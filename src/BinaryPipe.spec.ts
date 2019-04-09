@@ -20,15 +20,15 @@ describe('BinaryPipe', () => {
     const parser = generator2((value) => ({ number: value }));
 
     it('should return value from first parser', () => {
-      expect(BinaryPipe(null).pipe(parser1)).toEqual({ foobar: 'foobar' });
+      expect(BinaryPipe(Buffer.from([])).pipe(parser1)).toEqual({ foobar: 'foobar' });
     });
 
     it('should return value from parser and second parser', () => {
-      expect(BinaryPipe(null).pipe(parser1, parser)).toEqual({ foobar: 'foobar', number: 666 });
+      expect(BinaryPipe(Buffer.from([])).pipe(parser1, parser)).toEqual({ foobar: 'foobar', number: 666 });
     });
 
     it('should return value respecting initial value', () => {
-      expect(BinaryPipe(null, { test: 'test' }).pipe(parser1)).toEqual({ test: 'test', foobar: 'foobar' });
+      expect(BinaryPipe(Buffer.from([]), { test: 'test' }).pipe(parser1)).toEqual({ test: 'test', foobar: 'foobar' });
     });
   });
 });
