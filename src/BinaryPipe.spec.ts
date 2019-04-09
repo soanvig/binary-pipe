@@ -1,6 +1,6 @@
-import { IExtendFunction, BinaryTransformer } from './index';
+import { IExtendFunction, BinaryPipe } from './BinaryPipe';
 
-describe('BinaryTransformer', () => {
+describe('BinaryPipe', () => {
   function generator1<T> (func: (val: string) => T): IExtendFunction<T> {
     return (buffer, previousValue) => ({
       ...previousValue,
@@ -20,15 +20,15 @@ describe('BinaryTransformer', () => {
     const parser = generator2((value) => ({ number: value }));
 
     it('should return value from first parser', () => {
-      expect(BinaryTransformer(null).pipe(parser1)).toEqual({ foobar: 'foobar' });
+      expect(BinaryPipe(null).pipe(parser1)).toEqual({ foobar: 'foobar' });
     });
 
     it('should return value from parser and second parser', () => {
-      expect(BinaryTransformer(null).pipe(parser1, parser)).toEqual({ foobar: 'foobar', number: 666 });
+      expect(BinaryPipe(null).pipe(parser1, parser)).toEqual({ foobar: 'foobar', number: 666 });
     });
 
     it('should return value respecting initial value', () => {
-      expect(BinaryTransformer(null, { test: 'test' }).pipe(parser1)).toEqual({ test: 'test', foobar: 'foobar' });
+      expect(BinaryPipe(null, { test: 'test' }).pipe(parser1)).toEqual({ test: 'test', foobar: 'foobar' });
     });
   });
 });

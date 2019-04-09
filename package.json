@@ -1,7 +1,7 @@
 {
-  "name": "binary-transformer",
+  "name": "binary-pipe",
   "version": "1.0.0",
-  "description": "Take your binary file, and parse into structurized objects",
+  "description": "Take your binary file, and parse into structurized objects via pipeline",
   "main": "src/index.ts",
   "author": "Soanvig <soanvig@gmail.com>",
   "license": "GNU LGPLv3",
