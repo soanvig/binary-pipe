@@ -1,15 +1,16 @@
-export type IExtendFunction<T extends Record<string, any>> = <U>(buffer: Buffer, previousValue: U) => T & U;
+export type TExtendFunction<T extends Record<string, any>> =
+  <U>(buffer: IterableIterator<number>, previousValue: U) => T & U;
 
 export interface IBinaryPipe<T> {
-  pipe<A> (f1: IExtendFunction<A>): ReturnType<IExtendFunction<T & A>>;
-  pipe<A, B> (f1: IExtendFunction<A>, f2: IExtendFunction<B>): ReturnType<IExtendFunction<T & A & B>>;
-  pipe<A, B, C> (f1: IExtendFunction<A>, f2: IExtendFunction<B>, f3: IExtendFunction<C>): ReturnType<IExtendFunction<T & A & B & C>>;
-  pipe<A, B, C, D> (f1: IExtendFunction<A>, f2: IExtendFunction<B>, f3: IExtendFunction<C>, f4: IExtendFunction<D>): ReturnType<IExtendFunction<T & A & B & C & D>>;
-  pipe<A, B, C, D, E> (f1: IExtendFunction<A>, f2: IExtendFunction<B>, f3: IExtendFunction<C>, f4: IExtendFunction<D>, f5: IExtendFunction<E>): ReturnType<IExtendFunction<T & A & B & C & D & E>>;
-  pipe<A, B, C, D, E, F> (f1: IExtendFunction<A>, f2: IExtendFunction<B>, f3: IExtendFunction<C>, f4: IExtendFunction<D>, f5: IExtendFunction<E>, f6: IExtendFunction<F>): ReturnType<IExtendFunction<T & A & B & C & D & E & F>>;
-  pipe<A, B, C, D, E, F, H> (f1: IExtendFunction<A>, f2: IExtendFunction<B>, f3: IExtendFunction<C>, f4: IExtendFunction<D>, f5: IExtendFunction<E>, f6: IExtendFunction<F>, f7: IExtendFunction<H>): ReturnType<IExtendFunction<T & A & B & C & D & E & F & H>>;
-  pipe<A, B, C, D, E, F, H, I> (f1: IExtendFunction<A>, f2: IExtendFunction<B>, f3: IExtendFunction<C>, f4: IExtendFunction<D>, f5: IExtendFunction<E>, f6: IExtendFunction<F>, f7: IExtendFunction<H>, f8: IExtendFunction<I>): ReturnType<IExtendFunction<T & A & B & C & D & E & F & H & I>>;
-  pipe (...functions: IExtendFunction<any>[]): Record<string, any>;
+  pipe<A> (f1: TExtendFunction<A>): ReturnType<TExtendFunction<T & A>>;
+  pipe<A, B> (f1: TExtendFunction<A>, f2: TExtendFunction<B>): ReturnType<TExtendFunction<T & A & B>>;
+  pipe<A, B, C> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>): ReturnType<TExtendFunction<T & A & B & C>>;
+  pipe<A, B, C, D> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>): ReturnType<TExtendFunction<T & A & B & C & D>>;
+  pipe<A, B, C, D, E> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>): ReturnType<TExtendFunction<T & A & B & C & D & E>>;
+  pipe<A, B, C, D, E, F> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>): ReturnType<TExtendFunction<T & A & B & C & D & E & F>>;
+  pipe<A, B, C, D, E, F, H> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>, f7: TExtendFunction<H>): ReturnType<TExtendFunction<T & A & B & C & D & E & F & H>>;
+  pipe<A, B, C, D, E, F, H, I> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>, f7: TExtendFunction<H>, f8: TExtendFunction<I>): ReturnType<TExtendFunction<T & A & B & C & D & E & F & H & I>>;
+  pipe (...functions: TExtendFunction<any>[]): Record<string, any>;
 }
 
 /**
@@ -20,7 +21,7 @@ export interface IBinaryPipe<T> {
  * @param initialObject - object that should be filled-up with values
  */
 export function BinaryPipe<T extends Record<string, any>> (
-    buffer: Buffer, initialObject: T = {} as T,
+    buffer: IterableIterator<number>, initialObject: T = {} as T,
   ): IBinaryPipe<T> {
   return {
     /**
@@ -30,7 +31,7 @@ export function BinaryPipe<T extends Record<string, any>> (
      *
      * @param functions - functions for pipeline
      */
-    pipe (...functions: IExtendFunction<any>[]) {
+    pipe (...functions: TExtendFunction<any>[]) {
       return functions.reduce((previousValue, func) => func(buffer, previousValue), initialObject);
     },
   };
