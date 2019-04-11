@@ -1,3 +1,5 @@
+import { iterateBuffer } from './iterateBuffer';
+
 export type TExtendFunction<T extends Record<string, any>> =
   <U>(buffer: IterableIterator<number>, previousValue: U) => T & U;
 
@@ -21,8 +23,9 @@ export interface IBinaryPipe<T> {
  * @param initialObject - object that should be filled-up with values
  */
 export function BinaryPipe<T extends Record<string, any>> (
-    buffer: IterableIterator<number>, initialObject: T = {} as T,
-  ): IBinaryPipe<T> {
+  buffer: Buffer, initialObject: T = {} as T,
+): IBinaryPipe<T> {
+  const iterator: IterableIterator<number> = iterateBuffer(buffer);
   return {
     /**
      * Pipes buffer through given functions.
@@ -32,7 +35,7 @@ export function BinaryPipe<T extends Record<string, any>> (
      * @param functions - functions for pipeline
      */
     pipe (...functions: TExtendFunction<any>[]) {
-      return functions.reduce((previousValue, func) => func(buffer, previousValue), initialObject);
+      return functions.reduce((previousValue, func) => func(iterator, previousValue), initialObject);
     },
   };
 }
