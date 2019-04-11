@@ -1,5 +1,4 @@
 import { TExtendFunction, BinaryPipe } from './BinaryPipe';
-import { iterateBuffer } from './iterateBuffer';
 
 function generator<T> (func: (val: string) => T): TExtendFunction<T> {
   return (b, previousValue) => ({
@@ -21,3 +20,25 @@ const buffer = Buffer.from([1]);
 
 console.log(BinaryPipe(buffer, { foobar: 'barfoo' }).pipe(extender1)); // { test: 'foobar' }
 console.log(BinaryPipe(buffer).pipe(extender1, extender2)); // { test: 'foobar', test2: 'foobar' }
+
+type TFormatter<T> = (bytes: number[]) => T;
+
+function readInt8<T> (func: (val: number) => T): TExtendFunction<T>;
+function readInt8<T, U> (func: (val: U) => T, formatter: TFormatter<U>): TExtendFunction<T>;
+function readInt8<T, U> (func: (val: number | U) => T, formatter?: TFormatter<U>): TExtendFunction<T> {
+  return (b, previousValue) => {
+    const byte = b.next().value;
+    const formatted = formatter ? formatter([byte]) : byte;
+    return {
+      ...previousValue,
+      ...func(formatted),
+    };
+  };
+}
+
+function testFormatter (bytes: number[]): string {
+  return bytes[0].toString();
+}
+
+// Now val is string instead of number
+readInt8((val) => ({}), testFormatter);
