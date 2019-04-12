@@ -5,6 +5,9 @@
   "main": "src/index.ts",
   "author": "Soanvig <soanvig@gmail.com>",
   "license": "LGPL-3.0-or-later",
+  "files": [
+    "./dist/**/*"
+  ],
   "scripts": {
     "test:unit": "jest",
     "test:lint": "tslint --project .",
