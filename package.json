@@ -2,7 +2,7 @@
   "name": "binary-pipe",
   "version": "1.0.0",
   "description": "Take your binary file, and parse into structurized objects via pipeline",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "author": "Soanvig <soanvig@gmail.com>",
   "license": "LGPL-3.0-or-later",
   "files": [
