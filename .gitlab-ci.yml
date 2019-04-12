@@ -1,8 +1,9 @@
 variables:
-  IMAGE: node:10-alpine
+  IMAGE: tarampampam/node:alpine
 
 stages:
   - test
+  - deploy
 
 before_script:
   - npm install
@@ -24,3 +25,44 @@ ts:
   image: $IMAGE
   script:
     - npm run test:ts
+
+release major:
+  extends: .release
+  variables:
+    NPM_RELEASE_VERSION: major
+
+release minor:
+  extends: .release
+  variables:
+    NPM_RELEASE_VERSION: minor
+
+release patch:
+  extends: .release
+  variables:
+    NPM_RELEASE_VERSION: patch
+
+.release:
+  stage: deploy
+  image: $IMAGE
+  when: manual
+  tags:
+    - newton
+  only:
+    - master
+  script:
+    # Build
+    - yarn prebuild
+    - yarn build
+
+    # Configure Git
+    - git config --global user.name "Soanvig"
+    - git config --global user.email "soanvig@gmail.com"
+
+    # Prepare version
+    - yarn version --$NPM_RELEASE_VERSION
+    - GIT_SSH_COMMAND='ssh -i /ssh_keys/id_rsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git push --follow-tags git@gitlab.com:soanvig/binary-pipe.git HEAD:$CI_COMMIT_REF_NAME
+
+    # Save npm token and publish
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN">$HOME/.npmrc
+    # - npm publish
+    # - npm publish
