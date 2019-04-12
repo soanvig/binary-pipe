@@ -22,10 +22,9 @@ const inputBuffer: Buffer = Buffer.from([
  * @param bytes - bytes array
  */
 function formatStringWithSwap (bytes: number[]): string {
-  const buffer = Buffer.from(bytes);
-
   // Swap is performed, because that's how chars are saved in Infinity Engine
-  return buffer.swap16().toString();
+  const buffer = Buffer.from(bytes).swap16();
+  return buffer.toString();
 }
 
 const header = BinaryPipe(inputBuffer).pipe(
