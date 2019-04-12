@@ -1,4 +1,4 @@
-import { iterateBuffer } from './iterateBuffer';
+import { bufferGenerator } from './bufferGenerator';
 
 export type TFormatter<T> = (bytes: number[]) => T;
 
@@ -27,7 +27,7 @@ export interface IBinaryPipe<T> {
 export function BinaryPipe<T extends Record<string, any>> (
   buffer: Buffer, initialObject: T = {} as T,
 ): IBinaryPipe<T> {
-  const iterator: IterableIterator<number> = iterateBuffer(buffer);
+  const generator: IterableIterator<number> = bufferGenerator(buffer);
   return {
     /**
      * Pipes buffer through given functions.
@@ -37,7 +37,7 @@ export function BinaryPipe<T extends Record<string, any>> (
      * @param functions - functions for pipeline
      */
     pipe (...functions: TExtendFunction<any>[]) {
-      return functions.reduce((previousValue, func) => func(iterator, previousValue), initialObject);
+      return functions.reduce((previousValue, func) => func(generator, previousValue), initialObject);
     },
   };
 }

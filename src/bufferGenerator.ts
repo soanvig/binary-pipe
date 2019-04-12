@@ -1,10 +1,10 @@
 /**
- * Takes buffer and returns it as a iterator.
+ * Takes buffer and returns it as a generator/iterator.
  * Handles the problem of pipeline not knowning current buffer position.
  *
  * @param buffer - buffer to iterate over
  */
-export function* iterateBuffer (buffer: Buffer): IterableIterator<number> {
+export function* bufferGenerator (buffer: Buffer): IterableIterator<number> {
   // If buffer is empty, after first .next() it will throw
   if (buffer.length === 0) {
     throw new EmptyIteratorBufferError();

@@ -6,8 +6,8 @@ import { TExtendFunction, TFormatter } from './BinaryPipe';
 export function readInt8<T> (func: (byte: number) => T): TExtendFunction<T>;
 export function readInt8<T, U> (func: (byte: U) => T, formatter: TFormatter<U>): TExtendFunction<T>;
 export function readInt8<T, U> (func: (byte: number | U) => T, formatter?: TFormatter<U>): TExtendFunction<T> {
-  return (iterator, previousValue) => {
-    const byte = iterator.next().value;
+  return (generator, previousValue) => {
+    const byte = generator.next().value;
     const formatted = formatter ? formatter([byte]) : byte;
     return {
       ...previousValue,

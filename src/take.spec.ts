@@ -1,10 +1,10 @@
-import { iterateBuffer } from './iterateBuffer';
+import { bufferGenerator } from './bufferGenerator';
 import { take } from './take';
 
 describe('take', () => {
-  it('should take given number of bytes from iterator', () => {
-    const iterator = iterateBuffer(Buffer.from([1, 2, 3, 4, 5]));
-    const result: Buffer = take(iterator, 2);
+  it('should take given number of bytes from generator', () => {
+    const generator = bufferGenerator(Buffer.from([1, 2, 3, 4, 5]));
+    const result: Buffer = take(generator, 2);
     const arrayedResult: number[] = Array.from(result);
 
     expect(result).toBeInstanceOf(Buffer);
@@ -14,10 +14,10 @@ describe('take', () => {
   });
 
   it('should not iterate more than necessary', () => {
-    const iterator = iterateBuffer(Buffer.from([1, 2, 3, 4, 5]));
-    take(iterator, 2);
+    const generator = bufferGenerator(Buffer.from([1, 2, 3, 4, 5]));
+    take(generator, 2);
 
-    const nextValue: number = iterator.next().value;
+    const nextValue: number = generator.next().value;
 
     expect(nextValue).toBe(3);
   });

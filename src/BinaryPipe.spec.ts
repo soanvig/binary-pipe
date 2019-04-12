@@ -1,15 +1,14 @@
 import { TExtendFunction, BinaryPipe } from './BinaryPipe';
-import { iterateBuffer } from './iterateBuffer';
 
 describe('BinaryPipe', () => {
-  function generator1<T> (func: (val: string) => T): TExtendFunction<T> {
+  function parser1<T> (func: (val: string) => T): TExtendFunction<T> {
     return (buffer, previousValue) => ({
       ...previousValue,
       ...func('foobar'),
     });
   }
 
-  function generator2<T> (func: (val: number) => T): TExtendFunction<T> {
+  function parser2<T> (func: (val: number) => T): TExtendFunction<T> {
     return (buffer, previousValue) => ({
       ...previousValue,
       ...func(666),
@@ -18,19 +17,19 @@ describe('BinaryPipe', () => {
 
   describe('pipe', () => {
     const buffer = Buffer.from([1]);
-    const parser1 = generator1((value) => ({ foobar: value }));
-    const parser = generator2((value) => ({ number: value }));
+    const p1 = parser1((value) => ({ foobar: value }));
+    const p2 = parser2((value) => ({ number: value }));
 
     it('should return value from first parser', () => {
-      expect(BinaryPipe(buffer).pipe(parser1)).toEqual({ foobar: 'foobar' });
+      expect(BinaryPipe(buffer).pipe(p1)).toEqual({ foobar: 'foobar' });
     });
 
     it('should return value from parser and second parser', () => {
-      expect(BinaryPipe(buffer).pipe(parser1, parser)).toEqual({ foobar: 'foobar', number: 666 });
+      expect(BinaryPipe(buffer).pipe(p1, p2)).toEqual({ foobar: 'foobar', number: 666 });
     });
 
     it('should return value respecting initial value', () => {
-      expect(BinaryPipe(buffer, { test: 'test' }).pipe(parser1)).toEqual({ test: 'test', foobar: 'foobar' });
+      expect(BinaryPipe(buffer, { test: 'test' }).pipe(p1)).toEqual({ test: 'test', foobar: 'foobar' });
     });
   });
 });

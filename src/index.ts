@@ -1,2 +1,2 @@
 export { BinaryPipe } from './BinaryPipe';
-export { iterateBuffer } from './iterateBuffer';
+export { bufferGenerator as iterateBuffer } from './bufferGenerator';
