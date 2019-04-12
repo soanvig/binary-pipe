@@ -6,7 +6,7 @@ stages:
   - deploy
 
 before_script:
-  - npm install
+  - yarn install
 
 unit tests:
   stage: test
@@ -64,5 +64,4 @@ release patch:
 
     # Save npm token and publish
     - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN">$HOME/.npmrc
-    # - npm publish
-    # - npm publish
+    - npm publish
