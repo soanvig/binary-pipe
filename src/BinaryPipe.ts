@@ -1,5 +1,7 @@
 import { iterateBuffer } from './iterateBuffer';
 
+export type TFormatter<T> = (bytes: number[]) => T;
+
 export type TExtendFunction<T extends Record<string, any>> =
   <U>(buffer: IterableIterator<number>, previousValue: U) => T & U;
 
