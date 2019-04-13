@@ -4,6 +4,10 @@
   "description": "Take your binary file, and parse into structurized objects via pipeline",
   "author": "Soanvig <soanvig@gmail.com>",
   "license": "LGPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/soanvig/binary-pipe.git"
+  },
   "scripts": {
     "test:unit": "jest",
     "test:lint": "tslint --project .",
