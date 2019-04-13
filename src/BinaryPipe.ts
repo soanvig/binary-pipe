@@ -30,14 +30,14 @@ export function BinaryPipe<T extends Record<string, any>> (
   const generator: IterableIterator<number> = bufferGenerator(buffer);
   return {
     /**
-     * Pipes buffer through given functions.
-     * It's up to function how many bytes it takes from buffer.
-     * Each function should return new literal object, that will be merged to initialObject.
+     * Pipes buffer through given parsers.
+     * It's up to parser how many bytes it takes from buffer.
+     * Each parser should return new literal object, that will be merged to previous object (or initialObject).
      *
-     * @param functions - functions for pipeline
+     * @param parsers - parsers for pipeline
      */
-    pipe (...functions: TExtendFunction<any>[]) {
-      return functions.reduce((previousValue, func) => func(generator, previousValue), initialObject);
+    pipe (...parsers: TExtendFunction<any>[]) {
+      return parsers.reduce((previousValue, callback) => callback(generator, previousValue), initialObject);
     },
   };
 }

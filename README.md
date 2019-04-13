@@ -7,13 +7,12 @@
 - [binary-pipe](#binary-pipe)
   - [How it works](#how-it-works)
   - [Example](#example)
-  - [Built-ins](#built-ins)
-    - [Parsers](#parsers)
-    - [Formatters](#formatters)
-  - [API](#api)
+  - [Documentation](#documentation)
     - [BinaryPipe](#binarypipe)
-    - [Parsers](#parsers-1)
-    - [Formatters](#formatters-1)
+    - [Parsers and formatters](#parsers-and-formatters)
+  - [Custom](#custom)
+    - [Parser](#parser)
+    - [Formatter](#formatter)
 
 <!-- /TOC -->
 
@@ -25,7 +24,7 @@ Parser reads values from buffer, and returns them into callback function. Callba
 
 Each parser may (and should) accept formatting function. Providing formatter for parser is optional. Formatter converts value returned from parser into string or anything.
 
-For parsing and formatting, you can use [one of the built-ins](#built-ins), or [create your owns](#api).
+For parsing and formatting, you can use [one of the built-ins](#documentation), or [create your owns](#custom).
 
 ## Example
 
@@ -50,27 +49,48 @@ Because **binary-pipe** operates on real literal objects, and provides TS typing
 
 If user wants to use formatter function, which returns some interface, `Array`, `String` or `Boolean` - fine. Final object will have proper typing even so.
 
-## Built-ins
+## Documentation
 
-This sections describes parsers and formatters built into library.
+This sections describe built-in functions. For creating your own function see [Custom](#custom) section.
 
-If you want to know how to create parser or formatter, see [API](#api).
-
-### Parsers
-
-Built-in parsers match [Node.js Buffer API](https://nodejs.org/api/buffer.html)
-
-### Formatters
-
-No formatters are created for now.
-
-For creating formatters see [Formatters in API section](#formatters-1)
-
-## API
-
+Complete documentation can be found here: [...](...)
 ### BinaryPipe
 
-### Parsers
+```ts
+/**
+ * BinaryPipe pipes buffer through pipeline of functions.
+ * Each function will fillup initialObject with returned object.
+ *
+ * @param buffer - buffer to parse
+ * @param initialObject - object that should be filled-up with values
+ */
+function BinaryPipe(buffer: Buffer, initialObject: = {})
+```
 
-### Formatters
+BinaryPipe returns object, with `pipe` method.
+
+```ts
+/**
+ * Pipes buffer through given parsers.
+ * It's up to parser how many bytes it takes from buffer.
+ * Each parser should return new literal object, that will be merged to previous object (or initialObject).
+ *
+ * @param parsers - parsers for pipeline
+ */
+pipe (...parsers)
+```
+
+Each parser given to pipe will then take buffer given in `BinaryPipe`, take out some values from it, and return them in some way to parser's callback function.
+
+From callback function value can be saved in new object, which will be merged into previous object.
+
+### Parsers and formatters
+
+See all parsers (starting from name `read`) and formatters (starting from name `format`) here: [...](...)
+
+## Custom
+
+### Parser
+
+### Formatter
 

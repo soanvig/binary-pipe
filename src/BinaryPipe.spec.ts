@@ -1,17 +1,17 @@
 import { TExtendFunction, BinaryPipe } from './BinaryPipe';
 
 describe('BinaryPipe', () => {
-  function parser1<T> (func: (val: string) => T): TExtendFunction<T> {
+  function parser1<T> (callback: (val: string) => T): TExtendFunction<T> {
     return (buffer, previousValue) => ({
       ...previousValue,
-      ...func('foobar'),
+      ...callback('foobar'),
     });
   }
 
-  function parser2<T> (func: (val: number) => T): TExtendFunction<T> {
+  function parser2<T> (callback: (val: number) => T): TExtendFunction<T> {
     return (buffer, previousValue) => ({
       ...previousValue,
-      ...func(666),
+      ...callback(666),
     });
   }
 
