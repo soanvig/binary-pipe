@@ -3,50 +3,70 @@ variables:
 
 stages:
   - test
+  - docs
   - deploy
 
 before_script:
   - yarn install
 
+# Unit tests
 unit tests:
   stage: test
   image: $IMAGE
   script:
     - npm run test:unit
 
+# Test TSLint
 lint:
   stage: test
   image: $IMAGE
   script:
     - npm run test:lint
 
+# Test TypeScript
 ts:
   stage: test
   image: $IMAGE
   script:
     - npm run test:ts
 
+# Documentation
+pages:
+  image: $IMAGE
+  only:
+    - master
+  stage: docs
+  script:
+    - yarn docs
+  artifacts:
+    paths:
+      - public
+
+# Major release
 release major:
   extends: .release
   variables:
     NPM_RELEASE_VERSION: major
 
+# Minor release
 release minor:
   extends: .release
   variables:
     NPM_RELEASE_VERSION: minor
 
+# Patch release
 release patch:
   extends: .release
   variables:
     NPM_RELEASE_VERSION: patch
 
+# Release
 .release:
   stage: deploy
   image: $IMAGE
   when: manual
   tags:
-    - newton
+    - newton # tag is required for proper SSH key access (it's run on private machine)
   only:
     - master
   script:

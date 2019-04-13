@@ -1,0 +1,6 @@
+{
+  "out": "public",
+  "name": "binary-pipe",
+  "readme": "./README.md",
+  "exclude": "**/*.spec.ts"
+}

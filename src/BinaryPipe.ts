@@ -3,7 +3,7 @@ import { bufferGenerator } from './bufferGenerator';
 export type TFormatter<T> = (bytes: number[]) => T;
 
 export type TExtendFunction<T extends Record<string, any>> =
-  <U>(buffer: IterableIterator<number>, previousValue: U) => T & U;
+  <U>(buffer: IterableIterator<number>, previousValue: U) => T;
 
 export interface IBinaryPipe<T> {
   pipe<A> (f1: TExtendFunction<A>): ReturnType<TExtendFunction<T & A>>;
@@ -30,14 +30,20 @@ export function BinaryPipe<T extends Record<string, any>> (
   const generator: IterableIterator<number> = bufferGenerator(buffer);
   return {
     /**
-     * Pipes buffer through given functions.
-     * It's up to function how many bytes it takes from buffer.
-     * Each function should return new literal object, that will be merged to initialObject.
+     * Pipes buffer through given parsers.
+     * It's up to parser how many bytes it takes from buffer.
+     * Each parser should return new literal object, that will be merged to previous object (or initialObject) by pipe.
      *
-     * @param functions - functions for pipeline
+     * @param parsers - parsers for pipeline
      */
-    pipe (...functions: TExtendFunction<any>[]) {
-      return functions.reduce((previousValue, func) => func(generator, previousValue), initialObject);
+    pipe (...parsers: TExtendFunction<any>[]) {
+      return parsers.reduce((previousValue, callback) => {
+        const newObject = callback(generator, previousValue);
+        return {
+          ...previousValue,
+          ...newObject,
+        };
+      }, initialObject);
     },
   };
 }

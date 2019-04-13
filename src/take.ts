@@ -3,6 +3,7 @@
  *
  * @param generator - generator to retrieve values from
  * @param count - number of values to take
+ * @ignore
  */
 export function take (generator: IterableIterator<number>, count: number): Buffer {
   const buffer: number[] = [];
