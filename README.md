@@ -146,6 +146,10 @@ export function readInt8 (callback, formatter = null) {
 }
 ```
 
+**WARNING**: don't use `for-of` for reading generator, since it always ends it, no matter of brake.
+
+If you want to read multiple values from generator, you may want to use `take(generator, count)` method exported from library.
+
 ### Formatter
 
 Formatter is function, which takes value from parser, and can manipulate it.
