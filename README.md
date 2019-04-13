@@ -71,7 +71,7 @@ Complete documentation can be found here: [https://soanvig.gitlab.io/binary-pipe
 function BinaryPipe(buffer: Buffer, initialObject: = {})
 ```
 
-BinaryPipe returns object, with `pipe` method.
+BinaryPipe returns object, with `pipe` and `finish` methods.
 
 ```ts
 /**
@@ -85,6 +85,16 @@ pipe (...parsers)
 ```
 
 Each parser given to pipe will then take buffer given in `BinaryPipe`, take out some values from it, and return them in some way to parser's callback function.
+
+```ts
+/**
+ * Returns buffer not parsed by pipe yet.
+ * Closes generator, so no piping will be available after calling `finish`.
+ */
+finish (),
+```
+
+Finish method is useful, if you want to take buffer that left as pipeline leftover. **warning** it closes internal generator, so you cannot pipe it anymore in this `BinaryPipe` instance.
 
 From callback function value can be saved in new object, which will be merged into previous object.
 
@@ -159,6 +169,8 @@ export function readInt8 (callback, formatter = null) {
 **WARNING**: don't use `for-of` for reading generator, since it always ends it, no matter of brake.
 
 If you want to read multiple values from generator, you may want to use `take(generator, count)` method exported from library.
+
+**WARNING**: generator's last value is returned as `{ value: [value], done: true }`.
 
 ### Formatter
 

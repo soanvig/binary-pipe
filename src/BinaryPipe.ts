@@ -15,6 +15,7 @@ export interface IBinaryPipe<T> {
   pipe<A, B, C, D, E, F, H> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>, f7: TExtendFunction<H>): ReturnType<TExtendFunction<T & A & B & C & D & E & F & H>>;
   pipe<A, B, C, D, E, F, H, I> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>, f7: TExtendFunction<H>, f8: TExtendFunction<I>): ReturnType<TExtendFunction<T & A & B & C & D & E & F & H & I>>;
   pipe (...functions: TExtendFunction<any>[]): Record<string, any>;
+  finish (): Buffer;
 }
 
 /**
@@ -44,6 +45,23 @@ export function BinaryPipe<T extends Record<string, any>> (
           ...newObject,
         };
       }, initialObject);
+    },
+
+    /**
+     * Returns buffer not parsed by pipe yet.
+     * Closes generator, so no piping will be available after calling `finish`.
+     */
+    finish () {
+      const buf: number[] = [];
+
+      // Take all bytes and close generator
+      let lastResult;
+      do {
+        lastResult = generator.next();
+        buf.push(lastResult.value);
+      } while (!lastResult.done)
+
+      return Buffer.from(buf);
     },
   };
 }
