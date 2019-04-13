@@ -11,13 +11,10 @@ import { take } from './take';
 export function readInt16BE<T> (callback: (value: number) => T): TExtendFunction<T>;
 export function readInt16BE<T, U> (callback: (value: U) => T, formatter: TFormatter<U>): TExtendFunction<T>;
 export function readInt16BE<T, U> (callback: (value: number | U) => T, formatter?: TFormatter<U>): TExtendFunction<T> {
-  return (generator, previousValue) => {
+  return (generator) => {
     const buffer: Buffer = take(generator, 2);
     const int: number = buffer.readInt16BE(0);
     const formatted = formatter ? formatter([int]) : int;
-    return {
-      ...previousValue,
-      ...callback(formatted),
-    };
+    return callback(formatted);
   };
 }

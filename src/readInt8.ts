@@ -10,12 +10,9 @@ import { TExtendFunction, TFormatter } from './BinaryPipe';
 export function readInt8<T> (callback: (value: number) => T): TExtendFunction<T>;
 export function readInt8<T, U> (callback: (value: U) => T, formatter: TFormatter<U>): TExtendFunction<T>;
 export function readInt8<T, U> (callback: (value: number | U) => T, formatter?: TFormatter<U>): TExtendFunction<T> {
-  return (generator, previousValue) => {
+  return (generator) => {
     const byte = generator.next().value;
     const formatted = formatter ? formatter([byte]) : byte;
-    return {
-      ...previousValue,
-      ...callback(formatted),
-    };
+    return callback(formatted);
   };
 }

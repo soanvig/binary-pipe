@@ -53,7 +53,8 @@ If user wants to use formatter function, which returns some interface, `Array`, 
 
 This sections describe built-in functions. For creating your own function see [Custom](#custom) section.
 
-Complete documentation can be found here: [...](...)
+Complete documentation can be found here: [https://soanvig.gitlab.io/binary-pipe](https://soanvig.gitlab.io/binary-pipe)
+
 ### BinaryPipe
 
 ```ts
@@ -86,11 +87,102 @@ From callback function value can be saved in new object, which will be merged in
 
 ### Parsers and formatters
 
-See all parsers (starting from name `read`) and formatters (starting from name `format`) here: [...](...)
+See all parsers (starting from name `read`) and formatters (starting from name `format`) here: [https://soanvig.gitlab.io/binary-pipe](https://soanvig.gitlab.io/binary-pipe)
 
 ## Custom
 
+User can create his/her own parsers and functions. See below, how it can be achieved.
+
 ### Parser
 
+Parser in detail is function, that takes `callback` function, `formatter`, and other optional arguments it needs.
+
+It returns new function, which accepts two arguments: `generator` and `previousValue`.
+
+`generator` is used to take out values from buffer, simply calling `generator.next().value` (it returns one buffer entry).
+
+`previousValue` is object of already piped values.
+
+The simplest example of parser would be `readInt8` function (**this is also great copy-paste from creating your own parser**):
+
+```ts
+/**
+ * Read single byte
+ *
+ * @see https://nodejs.org/api/buffer.html#buffer_buf_readint8_offset
+ *
+ * @param callback - callback
+ */
+export function readInt8<T> (callback: (value: number) => T): TExtendFunction<T>;
+export function readInt8<T, U> (callback: (value: U) => T, formatter: TFormatter<U>): TExtendFunction<T>;
+export function readInt8<T, U> (callback: (value: number | U) => T, formatter?: TFormatter<U>): TExtendFunction<T> {
+  // This function will be called later in pipeline
+  return (generator, previousValue) => {
+    // Take one byte from buffer
+    const byte = generator.next().value;
+    // Format it, if formatter was given
+    const formatted = formatter ? formatter([byte]) : byte;
+    // Call callback with formatted function, and return result
+    // (result should be object, so it can be merged into final object)
+    return callback(formatted);
+  };
+}
+```
+
+See also JS version:
+
+```js
+export function readInt8 (callback, formatter = null) {
+  // This function will be called later in pipeline
+  return (generator, previousValue) => {
+    // Take one byte from buffer
+    const byte = generator.next().value;
+    // Format it, if formatter was given
+    const formatted = formatter ? formatter([byte]) : byte;
+    // Call callback with formatted function, and return result
+    // (result should be object, so it can be merged into final object)
+    return callback(formatted);
+  };
+}
+```
+
 ### Formatter
+
+Formatter is function, which takes value from parser, and can manipulate it.
+
+Formatters should have unified interface, and all accept array of numbers (buffer values) as first argument.
+
+Formatter can do with that values anything it wants.
+
+See simple formatter implementation, which takes array of numbers, and converts them to string:
+
+```ts
+/**
+ * Custom formatter, that takes bytes and converts them to ASCII chars.
+ *
+ * @param bytes - bytes array
+ */
+function formatString (bytes: number[]): string {
+  // convert bytes to buffer, for easier manipulation
+  const buffer = Buffer.from(bytes);
+  return buffer.toString();
+}
+```
+
+See also JS implementation
+
+```js
+/**
+ * Custom formatter, that takes bytes and converts them to ASCII chars.
+ *
+ * @param bytes - bytes array
+ */
+function formatString (bytes) {
+  // convert bytes to buffer, for easier manipulation
+  const buffer = Buffer.from(bytes);
+  return buffer.toString();
+}
+```
+
+
 

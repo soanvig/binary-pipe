@@ -10,12 +10,9 @@ import { take } from './take';
 export function readBytes<T> (count: number, callback: (bytes: number[]) => T): TExtendFunction<T>;
 export function readBytes<T, U> (count: number, callback: (value: U) => T, formatter: TFormatter<U>): TExtendFunction<T>;
 export function readBytes<T, U> (count: number, callback: (bytes: number[] | U) => T, formatter?: TFormatter<U>): TExtendFunction<T> {
-  return (generator, previousValue) => {
+  return (generator) => {
     const bytes = Array.from(take(generator, count));
     const formatted = formatter ? formatter(bytes) : bytes;
-    return {
-      ...previousValue,
-      ...callback(formatted),
-    };
+    return callback(formatted);
   };
 }
