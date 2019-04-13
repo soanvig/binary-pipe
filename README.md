@@ -1,6 +1,6 @@
 # binary-pipe
 
-**binary-pipe** is handy util, when it comes to reading (parsing) binary files.
+**binary-pipe** is handy **Node.js** util, when it comes to reading (parsing) binary files.
 
 <!-- TOC -->
 
