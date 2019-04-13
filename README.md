@@ -49,6 +49,8 @@ Because **binary-pipe** operates on real literal objects, and provides TS typing
 
 If user wants to use formatter function, which returns some interface, `Array`, `String` or `Boolean` - fine. Final object will have proper typing even so.
 
+See more examples in [examples dir](./examples).
+
 ## Documentation
 
 This sections describe built-in functions. For creating your own function see [Custom](#custom) section.
