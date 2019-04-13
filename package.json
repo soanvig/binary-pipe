@@ -4,6 +4,7 @@
   "description": "Take your binary file, and parse into structurized objects via pipeline",
   "author": "Soanvig <soanvig@gmail.com>",
   "license": "LGPL-3.0-or-later",
+  "main": "./dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/soanvig/binary-pipe.git"
