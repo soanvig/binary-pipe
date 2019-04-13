@@ -9,6 +9,7 @@
   - [Example](#example)
   - [Documentation](#documentation)
     - [BinaryPipe](#binarypipe)
+      - [Pipe typing issue](#pipe-typing-issue)
     - [Parsers and formatters](#parsers-and-formatters)
   - [Custom](#custom)
     - [Parser](#parser)
@@ -86,6 +87,13 @@ pipe (...parsers)
 Each parser given to pipe will then take buffer given in `BinaryPipe`, take out some values from it, and return them in some way to parser's callback function.
 
 From callback function value can be saved in new object, which will be merged into previous object.
+
+#### Pipe typing issue
+
+For now pipe can provide correct typing of final object only if 8 or less parsers are used. This comes from TypeScript limitation - pipe functions with changing types cannot be properly typed for infinity number of functions.
+
+If you need more than 8 parsers you may want to split parsing into parts.
+If you encountered this problem, please [create an issue in repository](https://gitlab.com/soanvig/binary-pipe/issues/new).
 
 ### Parsers and formatters
 
