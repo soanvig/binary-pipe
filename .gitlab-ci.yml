@@ -33,8 +33,8 @@ ts:
 # Documentation
 pages:
   image: $IMAGE
-  # only:
-    # - master
+  only:
+    - master
   stage: docs
   script:
     - yarn docs
