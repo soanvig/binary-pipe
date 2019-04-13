@@ -59,7 +59,7 @@ export function BinaryPipe<T extends Record<string, any>> (
       do {
         lastResult = generator.next();
         buf.push(lastResult.value);
-      } while (!lastResult.done)
+      } while (!lastResult.done);
 
       return Buffer.from(buf);
     },
