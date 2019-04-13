@@ -71,7 +71,6 @@ release patch:
     - master
   script:
     # Build
-    - yarn prebuild
     - yarn build
 
     # Configure Git
@@ -84,4 +83,4 @@ release patch:
 
     # Save npm token and publish
     - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN">$HOME/.npmrc
-    - npm publish
+    - npm publish dist

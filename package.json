@@ -2,18 +2,14 @@
   "name": "binary-pipe",
   "version": "1.0.0",
   "description": "Take your binary file, and parse into structurized objects via pipeline",
-  "main": "dist/index.js",
   "author": "Soanvig <soanvig@gmail.com>",
   "license": "LGPL-3.0-or-later",
-  "files": [
-    "./dist/**/*"
-  ],
   "scripts": {
     "test:unit": "jest",
     "test:lint": "tslint --project .",
     "test:ts": "tsc --noEmit",
     "prebuild": "rimraf dist",
-    "build": "tsc",
+    "build": "tsc && cp ./package.json ./dist/package.json",
     "docs": "typedoc ./src"
   },
   "devDependencies": {
