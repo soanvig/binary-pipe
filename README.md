@@ -7,6 +7,7 @@
 - [binary-pipe](#binary-pipe)
   - [How it works](#how-it-works)
   - [Example](#example)
+  - [Installation](#installation)
   - [Documentation](#documentation)
     - [BinaryPipe](#binarypipe)
       - [Pipe typing issue](#pipe-typing-issue)
@@ -51,6 +52,12 @@ Because **binary-pipe** operates on real literal objects, and provides TS typing
 If user wants to use formatter function, which returns some interface, `Array`, `String` or `Boolean` - fine. Final object will have proper typing even so.
 
 See more examples in [examples dir](./examples).
+
+## Installation
+
+Yarn | npm
+--- | ---
+`yarn add binary-pipe` | `npm install binary-pipe`
 
 ## Documentation
 
