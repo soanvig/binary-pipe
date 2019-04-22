@@ -14,7 +14,8 @@
     "test:lint": "tslint --project .",
     "test:ts": "tsc --noEmit",
     "prebuild": "rimraf dist",
-    "build": "tsc && cp ./package.json ./dist/package.json && cp ./README.md ./dist/README.md",
+    "build": "tsc",
+    "prepublish": "cp ./package.json ./dist/package.json && cp ./README.md ./dist/README.md",
     "docs": "typedoc ./src"
   },
   "devDependencies": {
