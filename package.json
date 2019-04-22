@@ -1,6 +1,6 @@
 {
   "name": "binary-pipe",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Take your binary file, and parse into structurized objects via pipeline",
   "author": "Soanvig <soanvig@gmail.com>",
   "license": "LGPL-3.0-or-later",
