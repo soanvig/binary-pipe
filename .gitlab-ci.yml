@@ -83,5 +83,5 @@ release patch:
 
     # Save npm token and publish
     - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN">$HOME/.npmrc
-    - yarn prepublish
+    - yarn beforePublish
     - npm publish dist
