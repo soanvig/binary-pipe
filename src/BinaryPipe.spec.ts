@@ -1,4 +1,5 @@
 import { TExtendFunction, BinaryPipe } from './BinaryPipe';
+import { readInt8 } from './readInt8';
 
 describe('BinaryPipe', () => {
   function parser1<T> (callback: (val: string) => T): TExtendFunction<T> {
@@ -24,6 +25,19 @@ describe('BinaryPipe', () => {
 
     it('should return value respecting initial value', () => {
       expect(BinaryPipe(buffer, { test: 'test' }).pipe(p1)).toEqual({ test: 'test', foobar: 'foobar' });
+    });
+  });
+
+  describe('loop', () => {
+    it('should iterate given times over buffer', () => {
+      const buffer = Buffer.from([1, 2, 3]);
+      const result = BinaryPipe(buffer).loop(3).pipe(readInt8((value) => ({ value })));
+
+      expect(result).toHaveLength(3);
+
+      expect(result[0].value).toBe(1);
+      expect(result[1].value).toBe(2);
+      expect(result[2].value).toBe(3);
     });
   });
 
