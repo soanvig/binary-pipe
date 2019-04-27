@@ -13,7 +13,6 @@
     },
     "exclude": [
       "./dist",
-      "./**/*.spec.ts",
       "./examples"
     ]
 }
