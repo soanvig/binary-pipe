@@ -78,7 +78,7 @@ Complete documentation can be found here: [https://soanvig.gitlab.io/binary-pipe
 function BinaryPipe(buffer: Buffer, initialObject: = {})
 ```
 
-BinaryPipe returns object, with `pipe` and `finish` methods.
+BinaryPipe returns object, with `pipe`, `loop` and `finish` methods.
 
 ```ts
 /**
@@ -92,6 +92,18 @@ pipe (...parsers)
 ```
 
 Each parser given to pipe will then take buffer given in `BinaryPipe`, take out some values from it, and return them in some way to parser's callback function.
+
+```ts
+ /**
+   * Returns special pipe function, which iterates `count` times over buffer,
+   * returning array of results.
+   *
+   * @param count - number of times to iterate.
+   */
+  loop (count: number) {
+```
+
+`loop` function returns special type of pipe function, which underhood calls `BinaryPipe.pipe` function `count` times, and the result is array of objects returned from each pipe call. This is especially useful, if you have sequence of objects that you want to parse desired number of times.
 
 ```ts
 /**
