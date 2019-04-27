@@ -48,7 +48,7 @@ export function BinaryPipe<T extends Record<string, any>> (
      *
      * @param parsers - parsers for pipeline
      */
-    pipe(...parsers: TExtendFunction<any>[]) {
+    pipe (...parsers: TExtendFunction<any>[]) {
       // Call each parser and merge returned value into one object
       return parsers.reduce((previousValue, callback) => {
         const newObject = callback(generator, previousValue);
