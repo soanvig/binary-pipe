@@ -1,4 +1,4 @@
-import { TExtendFunction, TFormatter } from './BinaryPipe';
+import { ParserFunction } from './BinaryPipe';
 import { take } from './take';
 
 /**
@@ -6,15 +6,15 @@ import { take } from './take';
  *
  * @see https://nodejs.org/api/buffer.html#buffer_buf_readint32be_offset
  *
- * @param callback - callback
+ * @param formatter - formatter
  */
-export function readInt32BE<T> (callback: (value: number) => T): TExtendFunction<T>;
-export function readInt32BE<T, U> (callback: (value: U) => T, formatter: TFormatter<U>): TExtendFunction<T>;
-export function readInt32BE<T, U> (callback: (value: number | U) => T, formatter?: TFormatter<U>): TExtendFunction<T> {
+export function readInt32BE (): ParserFunction<number>;
+export function readInt32BE<T> (formatter: (v: number) => T): ParserFunction<T>;
+export function readInt32BE<T> (formatter?: (v: number) => T): ParserFunction<number | T> {
   return (generator) => {
     const buffer: Buffer = take(generator, 4);
     const int: number = buffer.readInt32BE(0);
-    const formatted = formatter ? formatter([int]) : int;
-    return callback(formatted);
+    const formatted = formatter ? formatter(int) : int;
+    return formatted;
   };
 }

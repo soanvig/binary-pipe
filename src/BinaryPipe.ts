@@ -1,7 +1,5 @@
 import { bufferGenerator } from './bufferGenerator';
 
-export type TFormatter<T> = (bytes: number[]) => T;
-
 export type ParserFunction<T> = (iter: IterableIterator<number>) => T;
 export type Parser<T, kT extends string> = [kT, ParserFunction<T>];
 export type ParserResult<T, kT extends string> = { [key in kT]: T };
