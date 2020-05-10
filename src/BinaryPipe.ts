@@ -2,20 +2,29 @@ import { bufferGenerator } from './bufferGenerator';
 
 export type TFormatter<T> = (bytes: number[]) => T;
 
-export type TExtendFunction<T extends Record<string, any>> =
-  (buffer: IterableIterator<number>) => T;
+export type ParserFunction<T> = (iter: IterableIterator<number>) => T;
+export type Parser<T, kT extends string> = [kT, ParserFunction<T>];
+export type ParserResult<T, kT extends string> = { [key in kT]: T };
 
 export interface IBinaryPipe<T> {
-  pipe<A> (f1: TExtendFunction<A>): T & A;
-  pipe<A, B> (f1: TExtendFunction<A>, f2: TExtendFunction<B>): T & A & B;
-  pipe<A, B, C> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>): T & A & B & C;
-  pipe<A, B, C, D> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>): T & A & B & C & D;
-  pipe<A, B, C, D, E> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>): T & A & B & C & D & E;
-  pipe<A, B, C, D, E, F> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>): T & A & B & C & D & E & F;
-  pipe<A, B, C, D, E, F, H> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>, f7: TExtendFunction<H>): T & A & B & C & D & E & F & H;
-  pipe<A, B, C, D, E, F, H, I> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>, f7: TExtendFunction<H>, f8: TExtendFunction<I>): T & A & B & C & D & E & F & H & I;
-  pipe (...functions: TExtendFunction<any>[]): Record<string, any>;
-  loop (count: number): Pick<IBinaryPipe<T>, 'pipe'>;
+  pipe<A, kA extends string> (p1: Parser<A, kA>): T & ParserResult<A, kA>;
+  pipe<A, kA extends string, B, kB extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>): T & ParserResult<A, kA> & ParserResult<B, kB>;
+  pipe<A, kA extends string, B, kB extends string, C, kC extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>, p3: Parser<C, kC>): T & ParserResult<A, kA> & ParserResult<B, kB> & ParserResult<C, kC>;
+  pipe<A, kA extends string, B, kB extends string, C, kC extends string, D, kD extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>, p3: Parser<C, kC>, p4: Parser<D, kD>): T & ParserResult<A, kA> & ParserResult<B, kB> & ParserResult<C, kC> & ParserResult<D, kD>;
+  pipe<A, kA extends string, B, kB extends string, C, kC extends string, D, kD extends string, E, kE extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>, p3: Parser<C, kC>, p4: Parser<D, kD>, p5: Parser<E, kE>): T & ParserResult<A, kA> & ParserResult<B, kB> & ParserResult<C, kC> & ParserResult<D, kD> & ParserResult<E, kE>;
+  pipe<A, kA extends string, B, kB extends string, C, kC extends string, D, kD extends string, E, kE extends string, F, kF extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>, p3: Parser<C, kC>, p4: Parser<D, kD>, p5: Parser<E, kE>, p6: Parser<F, kF>): T & ParserResult<A, kA> & ParserResult<B, kB> & ParserResult<C, kC> & ParserResult<D, kD> & ParserResult<E, kE> & ParserResult<F, kF>;
+  pipe<A, kA extends string, B, kB extends string, C, kC extends string, D, kD extends string, E, kE extends string, F, kF extends string, G, kG extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>, p3: Parser<C, kC>, p4: Parser<D, kD>, p5: Parser<E, kE>, p6: Parser<F, kF>, p7: Parser<G, kG>): T & ParserResult<A, kA> & ParserResult<B, kB> & ParserResult<C, kC> & ParserResult<D, kD> & ParserResult<E, kE> & ParserResult<F, kF> & ParserResult<G, kG>;
+  pipe<A, kA extends string, B, kB extends string, C, kC extends string, D, kD extends string, E, kE extends string, F, kF extends string, G, kG extends string, H, kH extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>, p3: Parser<C, kC>, p4: Parser<D, kD>, p5: Parser<E, kE>, p6: Parser<F, kF>, p7: Parser<G, kG>, p8: Parser<H, kH>): T & ParserResult<A, kA> & ParserResult<B, kB> & ParserResult<C, kC> & ParserResult<D, kD> & ParserResult<E, kE> & ParserResult<F, kF> & ParserResult<G, kG> & ParserResult<H, kH>;
+  loop (count: number): {
+    pipe<A, kA extends string> (p1: Parser<A, kA>): (T & ParserResult<A, kA>)[];
+    pipe<A, kA extends string, B, kB extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>): (T & ParserResult<A, kA> & ParserResult<B, kB>)[];
+    pipe<A, kA extends string, B, kB extends string, C, kC extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>, p3: Parser<C, kC>): (T & ParserResult<A, kA> & ParserResult<B, kB> & ParserResult<C, kC>)[];
+    pipe<A, kA extends string, B, kB extends string, C, kC extends string, D, kD extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>, p3: Parser<C, kC>, p4: Parser<D, kD>): (T & ParserResult<A, kA> & ParserResult<B, kB> & ParserResult<C, kC> & ParserResult<D, kD>)[];
+    pipe<A, kA extends string, B, kB extends string, C, kC extends string, D, kD extends string, E, kE extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>, p3: Parser<C, kC>, p4: Parser<D, kD>, p5: Parser<E, kE>): (T & ParserResult<A, kA> & ParserResult<B, kB> & ParserResult<C, kC> & ParserResult<D, kD> & ParserResult<E, kE>)[];
+    pipe<A, kA extends string, B, kB extends string, C, kC extends string, D, kD extends string, E, kE extends string, F, kF extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>, p3: Parser<C, kC>, p4: Parser<D, kD>, p5: Parser<E, kE>, p6: Parser<F, kF>): (T & ParserResult<A, kA> & ParserResult<B, kB> & ParserResult<C, kC> & ParserResult<D, kD> & ParserResult<E, kE> & ParserResult<F, kF>)[];
+    pipe<A, kA extends string, B, kB extends string, C, kC extends string, D, kD extends string, E, kE extends string, F, kF extends string, G, kG extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>, p3: Parser<C, kC>, p4: Parser<D, kD>, p5: Parser<E, kE>, p6: Parser<F, kF>, p7: Parser<G, kG>): (T & ParserResult<A, kA> & ParserResult<B, kB> & ParserResult<C, kC> & ParserResult<D, kD> & ParserResult<E, kE> & ParserResult<F, kF> & ParserResult<G, kG>)[];
+    pipe<A, kA extends string, B, kB extends string, C, kC extends string, D, kD extends string, E, kE extends string, F, kF extends string, G, kG extends string, H, kH extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>, p3: Parser<C, kC>, p4: Parser<D, kD>, p5: Parser<E, kE>, p6: Parser<F, kF>, p7: Parser<G, kG>, p8: Parser<H, kH>): (T & ParserResult<A, kA> & ParserResult<B, kB> & ParserResult<C, kC> & ParserResult<D, kD> & ParserResult<E, kE> & ParserResult<F, kF> & ParserResult<G, kG> & ParserResult<H, kH>)[];
+  };
   finish (): Buffer;
 }
 
@@ -39,13 +48,13 @@ export function BinaryPipe<T extends Record<string, any>> (
      *
      * @param parsers - parsers for pipeline
      */
-    pipe (...parsers: TExtendFunction<any>[]) {
+    pipe (...parsers: Parser<any, string>[]) {
       // Call each parser and merge returned value into one object
-      return parsers.reduce((previousValue, callback) => {
-        const newObject = callback(generator);
+      return parsers.reduce((previousValue, parser) => {
+        const result = parser[1](generator);
         return {
           ...previousValue,
-          ...newObject,
+          [parser[0]]: result,
         };
       }, initialObject);
     },
@@ -58,10 +67,10 @@ export function BinaryPipe<T extends Record<string, any>> (
      */
     loop (count: number) {
       // save basePipe reference to avoid returned pipe calling itself
-      const basePipe = this.pipe;
+      const basePipe: Function = this.pipe;
 
       return {
-        pipe (...parsers: TExtendFunction<any>[]) {
+        pipe (...parsers: Parser<any, string>[]) {
           const entries = [];
 
           // Call basePipe `count` times
@@ -69,7 +78,7 @@ export function BinaryPipe<T extends Record<string, any>> (
             entries.push(basePipe(...parsers));
           }
 
-          return entries;
+          return entries as any;
         },
       };
     },
