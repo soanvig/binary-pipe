@@ -3,29 +3,19 @@ import { bufferGenerator } from './bufferGenerator';
 export type TFormatter<T> = (bytes: number[]) => T;
 
 export type TExtendFunction<T extends Record<string, any>> =
-  <U>(buffer: IterableIterator<number>, previousValue: U) => T;
+  (buffer: IterableIterator<number>) => T;
 
 export interface IBinaryPipe<T> {
-  pipe<A> (f1: TExtendFunction<A>): ReturnType<TExtendFunction<T & A>>;
-  pipe<A, B> (f1: TExtendFunction<A>, f2: TExtendFunction<B>): ReturnType<TExtendFunction<T & A & B>>;
-  pipe<A, B, C> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>): ReturnType<TExtendFunction<T & A & B & C>>;
-  pipe<A, B, C, D> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>): ReturnType<TExtendFunction<T & A & B & C & D>>;
-  pipe<A, B, C, D, E> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>): ReturnType<TExtendFunction<T & A & B & C & D & E>>;
-  pipe<A, B, C, D, E, F> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>): ReturnType<TExtendFunction<T & A & B & C & D & E & F>>;
-  pipe<A, B, C, D, E, F, H> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>, f7: TExtendFunction<H>): ReturnType<TExtendFunction<T & A & B & C & D & E & F & H>>;
-  pipe<A, B, C, D, E, F, H, I> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>, f7: TExtendFunction<H>, f8: TExtendFunction<I>): ReturnType<TExtendFunction<T & A & B & C & D & E & F & H & I>>;
+  pipe<A> (f1: TExtendFunction<A>): T & A;
+  pipe<A, B> (f1: TExtendFunction<A>, f2: TExtendFunction<B>): T & A & B;
+  pipe<A, B, C> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>): T & A & B & C;
+  pipe<A, B, C, D> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>): T & A & B & C & D;
+  pipe<A, B, C, D, E> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>): T & A & B & C & D & E;
+  pipe<A, B, C, D, E, F> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>): T & A & B & C & D & E & F;
+  pipe<A, B, C, D, E, F, H> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>, f7: TExtendFunction<H>): T & A & B & C & D & E & F & H;
+  pipe<A, B, C, D, E, F, H, I> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>, f7: TExtendFunction<H>, f8: TExtendFunction<I>): T & A & B & C & D & E & F & H & I;
   pipe (...functions: TExtendFunction<any>[]): Record<string, any>;
-  loop (count: number): {
-    pipe<A> (f1: TExtendFunction<A>): ReturnType<TExtendFunction<T & A>>[];
-    pipe<A, B> (f1: TExtendFunction<A>, f2: TExtendFunction<B>): ReturnType<TExtendFunction<T & A & B>>[];
-    pipe<A, B, C> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>): ReturnType<TExtendFunction<T & A & B & C>>[];
-    pipe<A, B, C, D> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>): ReturnType<TExtendFunction<T & A & B & C & D>>[];
-    pipe<A, B, C, D, E> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>): ReturnType<TExtendFunction<T & A & B & C & D & E>>[];
-    pipe<A, B, C, D, E, F> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>): ReturnType<TExtendFunction<T & A & B & C & D & E & F>>[];
-    pipe<A, B, C, D, E, F, H> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>, f7: TExtendFunction<H>): ReturnType<TExtendFunction<T & A & B & C & D & E & F & H>>[];
-    pipe<A, B, C, D, E, F, H, I> (f1: TExtendFunction<A>, f2: TExtendFunction<B>, f3: TExtendFunction<C>, f4: TExtendFunction<D>, f5: TExtendFunction<E>, f6: TExtendFunction<F>, f7: TExtendFunction<H>, f8: TExtendFunction<I>): ReturnType<TExtendFunction<T & A & B & C & D & E & F & H & I>>[];
-    pipe (...functions: TExtendFunction<any>[]): Record<string, any>[];
-  };
+  loop (count: number): Pick<IBinaryPipe<T>, 'pipe'>;
   finish (): Buffer;
 }
 
@@ -40,6 +30,7 @@ export function BinaryPipe<T extends Record<string, any>> (
   buffer: Buffer, initialObject: T = {} as T,
 ): IBinaryPipe<T> {
   const generator: IterableIterator<number> = bufferGenerator(buffer);
+
   return {
     /**
      * Pipes buffer through given parsers.
@@ -51,7 +42,7 @@ export function BinaryPipe<T extends Record<string, any>> (
     pipe (...parsers: TExtendFunction<any>[]) {
       // Call each parser and merge returned value into one object
       return parsers.reduce((previousValue, callback) => {
-        const newObject = callback(generator, previousValue);
+        const newObject = callback(generator);
         return {
           ...previousValue,
           ...newObject,
