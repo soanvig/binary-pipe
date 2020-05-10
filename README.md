@@ -35,21 +35,21 @@ import { BinaryPipe, readInt8 } from 'binary-pipe';
 
 const buffer = Buffer.from([1, 2, 3]);
 const result = BinaryPipe(buffer).pipe(
-  readInt8((byte) => ({ firstByte: byte })),
-  readInt8((byte) => ({ secondByte: byte })),
-  readInt8((byte) => ({ thirdByte: byte })),
+  ['firstByte', readInt8()],
+  ['secondByte', readInt8()],
+  ['thirdByte', readInt8()],
 );
 
 console.log(result); // { firstByte: 1, secondByte: 2, thirdByte: 3 }
 ```
 
-The example above takes simple three-value buffer, and pipes it through three functions: parsers.
+The example above takes simple three-value buffer, and pipes it through three tuples: parsers.
 
-Each of these parsers takes single byte (int8), and accepts callback. The callback accepts read byte, and returns new object. Each object is merged into previous one, so the final object is sum of all three, what is shown in `console.log` line.
+Each of these parsers takes property name, and parser function. Buffer is piped through parser functions, which result is merged into one object with declared properties, what is shown in `console.log` line.
 
 Because **binary-pipe** operates on real literal objects, and provides TS typing, it's **type-safe**: even the last object returned has proper typing.
 
-If user wants to use formatter function, which returns some interface, `Array`, `String` or `Boolean` - fine. Final object will have proper typing even so.
+Though by default each parser function returns number, it can accept formatter, which allows to change number into array, boolean, enum or anything.
 
 See more examples in [examples dir](./examples).
 
@@ -134,13 +134,11 @@ User can create his/her own parsers and functions. See below, how it can be achi
 
 ### Parser
 
-Parser in detail is function, that takes `callback` function, `formatter`, and other optional arguments it needs.
+Parser in detail is function, that takes optional `formatter`, and other arguments it needs.
 
 It returns new function, which accepts two arguments: `generator` and `previousValue`.
 
 `generator` is used to take out values from buffer, simply calling `generator.next().value` (it returns one buffer entry).
-
-`previousValue` is object of already piped values.
 
 The simplest example of parser would be `readInt8` function (**this is also great copy-paste from creating your own parser**):
 
@@ -150,20 +148,15 @@ The simplest example of parser would be `readInt8` function (**this is also grea
  *
  * @see https://nodejs.org/api/buffer.html#buffer_buf_readint8_offset
  *
- * @param callback - callback
+ * @param formatter - number formatter
  */
-export function readInt8<T> (callback: (value: number) => T): TExtendFunction<T>;
-export function readInt8<T, U> (callback: (value: U) => T, formatter: TFormatter<U>): TExtendFunction<T>;
-export function readInt8<T, U> (callback: (value: number | U) => T, formatter?: TFormatter<U>): TExtendFunction<T> {
-  // This function will be called later in pipeline
-  return (generator, previousValue) => {
-    // Take one byte from buffer
+export function readInt8 (): ParserFunction<number>;
+export function readInt8<T> (formatter: (v: number) => T): ParserFunction<T>;
+export function readInt8<T> (formatter?: (v: number) => T): ParserFunction<number | T> {
+  return (generator) => {
     const byte = generator.next().value;
-    // Format it, if formatter was given
-    const formatted = formatter ? formatter([byte]) : byte;
-    // Call callback with formatted function, and return result
-    // (result should be object, so it can be merged into final object)
-    return callback(formatted);
+    const formatted = formatter ? formatter(byte) : byte;
+    return formatted;
   };
 }
 ```
@@ -171,21 +164,16 @@ export function readInt8<T, U> (callback: (value: number | U) => T, formatter?: 
 See also JS version:
 
 ```js
-export function readInt8 (callback, formatter = null) {
-  // This function will be called later in pipeline
-  return (generator, previousValue) => {
-    // Take one byte from buffer
+export function readInt8 (formatter) {
+  return (generator) => {
     const byte = generator.next().value;
-    // Format it, if formatter was given
-    const formatted = formatter ? formatter([byte]) : byte;
-    // Call callback with formatted function, and return result
-    // (result should be object, so it can be merged into final object)
-    return callback(formatted);
+    const formatted = formatter ? formatter(byte) : byte;
+    return formatted;
   };
 }
 ```
 
-**WARNING**: don't use `for-of` for reading generator, since it always ends it, no matter of brake.
+**WARNING**: don't use `for-of` for reading generator, since it always exhausts generator, and whole pipeline will break.
 
 If you want to read multiple values from generator, you may want to use `take(generator, count)` method exported from library.
 
@@ -195,11 +183,9 @@ If you want to read multiple values from generator, you may want to use `take(ge
 
 Formatter is function, which takes value from parser, and can manipulate it.
 
-Formatters should have unified interface, and all accept array of numbers (buffer values) as first argument.
-
 Formatter can do with that values anything it wants.
 
-See simple formatter implementation, which takes array of numbers, and converts them to string:
+See simple formatter implementation, which takes array of numbers, and converts them to string. These are used with the `readBytes` parser.
 
 ```ts
 /**

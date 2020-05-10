@@ -6,8 +6,8 @@ describe('skip', () => {
   it('should skip desired number of values', () => {
     const buf = Buffer.from([1, 2, 3]);
     const result = BinaryPipe(buf).pipe(
-      skip(2),
-      readInt8((byte) => ({ byte })),
+      ['', skip(2)],
+      ['byte', readInt8()],
     );
 
     expect(result.byte).toBe(3);
