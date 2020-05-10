@@ -27,13 +27,13 @@ function formatString (bytes: number[]): string {
 
 const header = BinaryPipe(inputBuffer).pipe(
   // Read 4 bytes (signature is typed as `string`, because formatString returns `string`)
-  readBytes(4, (signature) => ({ signature }), formatString),
-  readBytes(4, (version) => ({ version }), formatString),
+  ['signature', readBytes(4, formatString)],
+  ['version', readBytes(4, formatString)],
   // Read 8 bytes of LE format
-  readInt32LE((bifEntriesCount) => ({ bifEntriesCount })),
-  readInt32LE((resourceEntriesCount) => ({ resourceEntriesCount })),
-  readInt32LE((bifEntriesOffset) => ({ bifEntriesOffset })),
-  readInt32LE((resourceEntriesOffset) => ({ resourceEntriesOffset })),
+  ['bifEntriesCount', readInt32LE()],
+  ['resourceEntriesCount', readInt32LE()],
+  ['bifEntriesOffset', readInt32LE()],
+  ['resourceEntriesOffset', readInt32LE()],
 );
 
 // Each field of the `header` has properly recognized type and name

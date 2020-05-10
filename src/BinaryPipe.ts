@@ -4,7 +4,7 @@ export type ParserFunction<T> = (iter: IterableIterator<number>) => T;
 export type Parser<T, kT extends string> = [kT, ParserFunction<T>];
 export type ParserResult<T, kT extends string> = { [key in kT]: T };
 
-export interface IBinaryPipe<T> {
+export interface BinaryPipe<T> {
   pipe<A, kA extends string> (p1: Parser<A, kA>): T & ParserResult<A, kA>;
   pipe<A, kA extends string, B, kB extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>): T & ParserResult<A, kA> & ParserResult<B, kB>;
   pipe<A, kA extends string, B, kB extends string, C, kC extends string> (p1: Parser<A, kA>, p2: Parser<B, kB>, p3: Parser<C, kC>): T & ParserResult<A, kA> & ParserResult<B, kB> & ParserResult<C, kC>;
@@ -35,7 +35,7 @@ export interface IBinaryPipe<T> {
  */
 export function BinaryPipe<T extends Record<string, any>> (
   buffer: Buffer, initialObject: T = {} as T,
-): IBinaryPipe<T> {
+): BinaryPipe<T> {
   const generator: IterableIterator<number> = bufferGenerator(buffer);
 
   return {

@@ -5,7 +5,7 @@ describe('readBytes', () => {
   it('should return given number of bytes', () => {
     const buffer = Buffer.from([1, 2, 3]);
     const result = BinaryPipe(buffer).pipe(
-      ['bytes', readBytes(2)]
+      ['bytes', readBytes(2)],
     );
 
     expect(result.bytes[0]).toBe(1);
